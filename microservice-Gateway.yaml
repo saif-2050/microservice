@@ -1,0 +1,33 @@
+eureka:
+    client:
+        service-url:
+            defaultZone: http://localhost:9093/eureka/
+        fetch-registry: true
+        register-with-eureka: true
+
+spring:
+    cloud:
+        gateway:
+          routes:
+                - id: microservice-classe
+                  uri: lb://microservice-classe
+                  predicates:
+                      - Path=/classe/**
+                  filters:
+                      - RewritePath=/classe/(?<path>.*), /$\{path}
+                - id: microservice-etudiant
+                  uri: lb://microservice-etudiant
+                  predicates:
+                      - Path=/etudiant/**
+                  filters:
+                      - RewritePath=/etudiant/(?<path>.*), /$\{path}
+management:
+  endpoint:
+    gateway:
+      enabled: true
+  endpoints:
+    web:
+      exposure:
+        include:
+        - "*"
+        
